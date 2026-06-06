@@ -1,8 +1,8 @@
 import { NextRequest } from "next/server";
-import { store } from "../_data/store";
+import { db } from "../_data/store";
 
 export async function GET() {
-  return Response.json(store.projects);
+  return Response.json(await db.projects());
 }
 
 export async function POST(request: NextRequest) {
@@ -14,6 +14,8 @@ export async function POST(request: NextRequest) {
     createdAt: body.createdAt ?? now,
     updatedAt: body.updatedAt ?? now,
   };
-  store.projects.unshift(project);
+  const projects = await db.projects();
+  projects.unshift(project);
+  await db.saveProjects(projects);
   return Response.json(project, { status: 201 });
 }

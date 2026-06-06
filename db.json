@@ -31,8 +31,50 @@
       "password": "password123",
       "avatarUrl": "https://i.pravatar.cc/150?img=33",
       "role": "member"
+    },
+    {
+      "name": "MUHAMMAD DANIAL",
+      "email": "danialrao999@gmail.com",
+      "password": "password123",
+      "role": "member",
+      "avatarUrl": "https://i.pravatar.cc/150?u=danialrao999%40gmail.com",
+      "createdAt": "2026-06-06T21:50:45.292Z",
+      "updatedAt": "2026-06-06T21:50:45.292Z",
+      "id": "ITagMcGVNwI"
     }
   ],
-  "projects": [],
-  "tasks": []
+  "projects": [
+    {
+      "name": "Website Redesign",
+      "description": "LKFLfnd m",
+      "status": "active",
+      "category": "development",
+      "progress": 0,
+      "ownerId": "u1",
+      "memberIds": [
+        "u1"
+      ],
+      "createdBy": "u1",
+      "createdAt": "2026-06-06T21:49:40.766Z",
+      "updatedAt": "2026-06-06T21:49:40.766Z",
+      "id": "IhL4aiIcmUs"
+    }
+  ],
+  "tasks": [
+    {
+      "title": "mFNKJnmd, cmnd jvkdv",
+      "description": "vfnfv kjv f",
+      "category": "design",
+      "priority": "medium",
+      "dueDate": "2026-06-09",
+      "assignedUser": "u2",
+      "status": "todo",
+      "projectId": "IhL4aiIcmUs",
+      "createdBy": "u1",
+      "createdAt": "2026-06-06T21:50:05.079Z",
+      "updatedAt": "2026-06-06T21:50:05.079Z",
+      "id": "IJsKEyZigJU"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }
