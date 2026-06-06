@@ -1,0 +1,38 @@
+{
+  "users": [
+    {
+      "id": "u1",
+      "name": "Admin",
+      "email": "admin@gmail.com",
+      "password": "password123",
+      "avatarUrl": "https://i.pravatar.cc/150?img=68",
+      "role": "admin"
+    },
+    {
+      "id": "u2",
+      "name": "Ali Rao",
+      "email": "alirao@gmail.com",
+      "password": "password123",
+      "avatarUrl": "https://i.pravatar.cc/150?img=11",
+      "role": "member"
+    },
+    {
+      "id": "u3",
+      "name": "Umar Awan",
+      "email": "umar@gmail.com",
+      "password": "password123",
+      "avatarUrl": "https://i.pravatar.cc/150?img=15",
+      "role": "member"
+    },
+    {
+      "id": "u4",
+      "name": "Asim Shabir",
+      "email": "asim2003@gmail.com",
+      "password": "password123",
+      "avatarUrl": "https://i.pravatar.cc/150?img=33",
+      "role": "member"
+    }
+  ],
+  "projects": [],
+  "tasks": []
+}

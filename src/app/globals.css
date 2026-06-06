@@ -1,0 +1,81 @@
+@import "tailwindcss";
+
+/* Light-mode tokens───────────────────────────────────────────────── */
+:root {
+  --color-board-bg:    #F3F4F8;
+  --color-card-bg:     #FFFFFF;
+  --color-heading:     #232360;
+  --color-desc:        #768396;
+  --color-date-border: #E2E2E2;
+  --color-date-bg:     transparent;
+  --color-date-text:   #768396;
+
+  /* Category tag colours */
+  --tag-design:      #5051F9;
+  --tag-planning:    #E97342;
+  --tag-research:    #1EA7FF;
+  --tag-development: #F59E0B;
+}
+
+/* Dark-mode tokens────────────────────────────────────────────────── */
+.dark {
+  --color-board-bg:    #131517;
+  --color-card-bg:     #1E1F25;
+  --color-heading:     #F6F6F6;
+  /* Lightened in dark mode for WCAG AA contrast on #1E1F25 (~6.9:1) */
+  --color-desc:        #9BAAB8;
+  --color-date-border: transparent;
+  --color-date-bg:     #2C2D37;
+  --color-date-text:   #F6F6F6;
+}
+
+/* Keyframe animations─────────────────────────────────────────────── */
+@keyframes modalOverlayIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes modalPanelIn {
+  from { opacity: 0; transform: scale(0.95) translateY(-8px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0);    }
+}
+@keyframes themeIconFlip {
+  from { opacity: 0; transform: rotate(-30deg) scale(0.7); }
+  to   { opacity: 1; transform: rotate(0deg)   scale(1);   }
+}
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+/* Tailwind v4 theme wiring────────────────────────────────────────── */
+@theme inline {
+  --color-board-bg:    var(--color-board-bg);
+  --color-card-bg:     var(--color-card-bg);
+  --color-heading:     var(--color-heading);
+  --color-desc:        var(--color-desc);
+  --color-date-border: var(--color-date-border);
+  --color-date-bg:     var(--color-date-bg);
+  --color-date-text:   var(--color-date-text);
+
+  --color-tag-design:      var(--tag-design);
+  --color-tag-planning:    var(--tag-planning);
+  --color-tag-research:    var(--tag-research);
+  --color-tag-development: var(--tag-development);
+
+  /* Animation utilities */
+  --animate-modal-overlay: modalOverlayIn 150ms ease-out both;
+  --animate-modal-panel:   modalPanelIn   220ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-theme-icon:    themeIconFlip  200ms ease-out both;
+  --animate-card-in:       cardIn         280ms ease-out both;
+}
+
+/* Base───── */
+html {
+  font-family: var(--font-dm-sans), sans-serif;
+}
+
+body {
+  background-color: var(--color-board-bg);
+  color: var(--color-heading);
+  min-height: 100vh;
+}
