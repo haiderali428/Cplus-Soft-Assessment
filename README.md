@@ -39,8 +39,8 @@ A full-stack project and task management app with a drag-and-drop Kanban board, 
 ### 1. Clone and install
 
 ```bash
-git clone <repo-url>
-cd cplus-soft
+git clone https://github.com/haiderali428/Cplus-Soft-Assessment.git
+cd Cplus-Soft-Assessment
 npm install
 ```
 
@@ -131,6 +131,6 @@ docker compose down
 
 ## Deployed on Vercel
 
-Live at: `<your-vercel-url>`
+Live at: `https://cplus-soft-assessment.vercel.app/`
 
 No extra setup needed — the built-in Next.js API routes (`/api/*`) serve all data on Vercel with no external services required.
