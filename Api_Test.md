@@ -1,439 +1,487 @@
-# Postman API Test Data
+# TaskFlow — API Test Reference (Postman)
 
-**Base URL (local):** `http://localhost:3000`  
-**Base URL (Vercel):** `https://your-vercel-url.vercel.app`
+All requests use `Content-Type: application/json`.  
+Replace `{{base}}` with your environment URL:
 
-All requests use:
+| Environment | Base URL |
+|---|---|
+| Local | `http://localhost:3000` |
+| Production | `https://cplus-soft-assessment.vercel.app` |
+
+---
+
+## Health Check
+
+### GET /api/health
+Verify MongoDB is connected and return document counts.
+
 ```
-Content-Type: application/json
+GET {{base}}/api/health
+```
+
+**Response 200**
+```json
+{
+  "connected": true,
+  "database": "taskflow",
+  "collections": {
+    "tasks": 5,
+    "projects": 3,
+    "users": 5
+  }
+}
+```
+
+**Response 500 — MONGODB_URI not set**
+```json
+{
+  "connected": false,
+  "error": "MONGODB_URI environment variable is not set."
+}
 ```
 
 ---
 
 ## Users
 
-### GET all users
+### GET /api/users
+Get all users.
+
 ```
-GET /api/users
+GET {{base}}/api/users
 ```
-No body needed.
+
+**Response 200**
+```json
+[
+  {
+    "id": "user-admin-01",
+    "name": "Admin",
+    "email": "admin@taskflow.dev",
+    "role": "admin",
+    "avatarUrl": "https://i.pravatar.cc/150?u=admin@taskflow.dev",
+    "createdAt": "2026-01-01T00:00:00.000Z",
+    "updatedAt": "2026-01-01T00:00:00.000Z"
+  }
+]
+```
 
 ---
 
-### GET users filtered by email
+### GET /api/users?email=admin@taskflow.dev
+Find a user by email (used internally by login).
+
 ```
-GET /api/users?email=alice@example.com
+GET {{base}}/api/users?email=admin@taskflow.dev
 ```
-No body needed.
+
+**Response 200**
+```json
+[
+  {
+    "id": "user-admin-01",
+    "name": "Admin",
+    "email": "admin@taskflow.dev",
+    "role": "admin"
+  }
+]
+```
 
 ---
 
-### GET user by ID
-```
-GET /api/users/u1
-```
-No body needed.
+### GET /api/users/:id
+Get a single user by ID.
 
-Try these IDs: `u1` `u2` `u3` `u4` `u5`
-
----
-
-### POST create new user
 ```
-POST /api/users
+GET {{base}}/api/users/user-admin-01
 ```
+
+**Response 200**
 ```json
 {
+  "id": "user-admin-01",
+  "name": "Admin",
+  "email": "admin@taskflow.dev",
+  "role": "admin"
+}
+```
+
+**Response 404**
+```json
+{ "error": "User not found" }
+```
+
+---
+
+### POST /api/users
+Create a new user (register).
+
+```
+POST {{base}}/api/users
+Content-Type: application/json
+```
+
+**Body**
+```json
+{
+  "id": "user-john-01",
   "name": "John Doe",
-  "email": "john@example.com",
+  "email": "john@taskflow.dev",
   "password": "password123",
   "role": "member",
-  "avatarUrl": "https://i.pravatar.cc/150?img=60"
+  "avatarUrl": "https://i.pravatar.cc/150?u=john@taskflow.dev",
+  "createdAt": "2026-06-07T00:00:00.000Z",
+  "updatedAt": "2026-06-07T00:00:00.000Z"
 }
 ```
 
-Admin user:
+**Valid values**
+- `role`: `"admin"` `"member"`
+
+**Response 201**
 ```json
 {
-  "name": "Sara Admin",
-  "email": "sara@example.com",
-  "password": "admin1234",
-  "role": "admin",
-  "avatarUrl": "https://i.pravatar.cc/150?img=20"
+  "id": "user-john-01",
+  "name": "John Doe",
+  "email": "john@taskflow.dev",
+  "role": "member"
 }
 ```
 
----
+**Response 409 — duplicate email**
+```json
+{ "error": "Email already in use" }
+```
 
 ---
 
 ## Projects
 
-### GET all projects
+### GET /api/projects
+Get all projects (sorted by newest first).
+
 ```
-GET /api/projects
+GET {{base}}/api/projects
 ```
-No body needed.
+
+**Response 200**
+```json
+[
+  {
+    "id": "proj-001",
+    "name": "Owners Inventory SaaS — Design",
+    "description": "UI/UX design for the Owners Inventory SaaS platform.",
+    "category": "design",
+    "status": "active",
+    "progress": 45,
+    "ownerId": "user-admin-01",
+    "memberIds": ["user-asim-01"],
+    "createdBy": "user-admin-01",
+    "createdAt": "2026-02-01T00:00:00.000Z",
+    "updatedAt": "2026-05-15T00:00:00.000Z"
+  }
+]
+```
 
 ---
 
-### GET project by ID
-```
-GET /api/projects/{id}
-```
-Replace `{id}` with an ID returned from the POST below.
+### GET /api/projects/:id
+Get a single project by ID.
 
----
-
-### POST create project
 ```
-POST /api/projects
+GET {{base}}/api/projects/proj-001
 ```
 
-Design project:
+**Response 200**
 ```json
 {
-  "name": "Website Redesign",
-  "description": "Complete redesign of the company website with new branding.",
+  "id": "proj-001",
+  "name": "Owners Inventory SaaS — Design",
   "category": "design",
   "status": "active",
-  "progress": 30,
-  "ownerId": "u1",
-  "memberIds": ["u1", "u2", "u3"],
-  "createdBy": "u1"
+  "progress": 45,
+  "ownerId": "user-admin-01",
+  "memberIds": ["user-asim-01"],
+  "createdAt": "2026-02-01T00:00:00.000Z",
+  "updatedAt": "2026-05-15T00:00:00.000Z"
 }
 ```
 
-Planning project:
+**Response 404**
+```json
+{ "error": "Project not found" }
+```
+
+---
+
+### POST /api/projects
+Create a new project.
+
+```
+POST {{base}}/api/projects
+Content-Type: application/json
+```
+
+**Body**
 ```json
 {
-  "name": "Q3 Product Roadmap",
-  "description": "Plan and prioritize features for Q3 release.",
-  "category": "planning",
+  "id": "proj-new-001",
+  "name": "New Website Redesign",
+  "description": "Complete redesign of the company website.",
+  "category": "design",
   "status": "active",
-  "progress": 10,
-  "ownerId": "u2",
-  "memberIds": ["u2", "u4"],
-  "createdBy": "u2"
+  "progress": 0,
+  "ownerId": "user-admin-01",
+  "memberIds": ["user-asim-01", "user-ali-01"],
+  "createdBy": "user-admin-01",
+  "createdAt": "2026-06-07T00:00:00.000Z",
+  "updatedAt": "2026-06-07T00:00:00.000Z"
 }
 ```
 
-Research project:
+**Valid values**
+- `category`: `"design"` `"research"` `"development"` `"planning"`
+- `status`: `"active"` `"onhold"` `"completed"`
+- `progress`: integer `0` – `100`
+
+**Response 201**
 ```json
 {
-  "name": "User Research Study",
-  "description": "Conduct interviews and usability testing with 20 users.",
-  "category": "research",
-  "status": "onhold",
-  "progress": 60,
-  "ownerId": "u3",
-  "memberIds": ["u3", "u5"],
-  "createdBy": "u3"
+  "id": "proj-new-001",
+  "name": "New Website Redesign",
+  "category": "design",
+  "status": "active",
+  "progress": 0,
+  "ownerId": "user-admin-01",
+  "memberIds": ["user-asim-01", "user-ali-01"],
+  "createdAt": "2026-06-07T00:00:00.000Z",
+  "updatedAt": "2026-06-07T00:00:00.000Z"
 }
 ```
 
-Development project:
+---
+
+### PATCH /api/projects/:id
+Update a project — send only the fields to change.
+
+```
+PATCH {{base}}/api/projects/proj-new-001
+Content-Type: application/json
+```
+
+**Body**
 ```json
 {
-  "name": "Mobile App v2",
-  "description": "Build the second version of the mobile application.",
-  "category": "development",
   "status": "completed",
   "progress": 100,
-  "ownerId": "u1",
-  "memberIds": ["u1", "u2", "u3", "u4", "u5"],
-  "createdBy": "u1"
+  "updatedAt": "2026-06-07T12:00:00.000Z"
 }
 ```
 
----
-
-### PATCH update project
-```
-PATCH /api/projects/{id}
-```
-
-Update status and progress:
+**Response 200** — returns the full updated document
 ```json
 {
-  "status": "onhold",
-  "progress": 75
-}
-```
-
-Update name and description:
-```json
-{
-  "name": "Website Redesign — Phase 2",
-  "description": "Continuing the redesign with focus on mobile responsiveness."
-}
-```
-
-Mark as completed:
-```json
-{
+  "id": "proj-new-001",
+  "name": "New Website Redesign",
   "status": "completed",
-  "progress": 100
+  "progress": 100,
+  "updatedAt": "2026-06-07T12:00:00.000Z"
 }
 ```
 
----
-
-### DELETE project
+**Response 404**
+```json
+{ "error": "Project not found" }
 ```
-DELETE /api/projects/{id}
-```
-No body needed.
 
 ---
+
+### DELETE /api/projects/:id
+Delete a project permanently.
+
+```
+DELETE {{base}}/api/projects/proj-new-001
+```
+
+**Response 200**
+```json
+{ "success": true }
+```
+
+**Response 404**
+```json
+{ "error": "Project not found" }
+```
 
 ---
 
 ## Tasks
 
-### GET all tasks
+### GET /api/tasks
+Get all tasks (sorted by newest first).
+
 ```
-GET /api/tasks
+GET {{base}}/api/tasks
 ```
-No body needed.
+
+**Response 200**
+```json
+[
+  {
+    "id": "task-001",
+    "title": "Design dashboard layout",
+    "description": "Create high-fidelity wireframes for the main dashboard.",
+    "category": "design",
+    "priority": "high",
+    "dueDate": "2026-07-10",
+    "assignedUser": "user-asim-01",
+    "status": "inprogress",
+    "projectId": "proj-001",
+    "createdBy": "user-admin-01",
+    "createdAt": "2026-02-05T00:00:00.000Z",
+    "updatedAt": "2026-05-20T00:00:00.000Z"
+  }
+]
+```
 
 ---
 
-### GET task by ID
+### GET /api/tasks/:id
+Get a single task by ID.
+
 ```
-GET /api/tasks/{id}
+GET {{base}}/api/tasks/task-001
 ```
-Replace `{id}` with an ID returned from the POST below.
 
----
-
-### POST create task
-
-> `projectId` must be an ID from an existing project. Run POST /api/projects first and copy the returned id.
-
-Backlog task:
+**Response 200**
 ```json
 {
-  "title": "Set up project repository",
-  "description": "Initialize Git repo, add .gitignore, README, and branch protection rules.",
-  "category": "development",
-  "priority": "high",
-  "status": "backlog",
-  "projectId": "{projectId}",
-  "assignedUser": "u2",
-  "createdBy": "u1"
-}
-```
-
-Todo task:
-```json
-{
-  "title": "Design landing page wireframes",
-  "description": "Create low-fidelity wireframes for the new landing page in Figma.",
+  "id": "task-001",
+  "title": "Design dashboard layout",
   "category": "design",
-  "priority": "medium",
-  "status": "todo",
-  "projectId": "{projectId}",
-  "assignedUser": "u3",
-  "dueDate": "2026-07-15",
-  "bannerImage": "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800",
-  "createdBy": "u2"
-}
-```
-
-In Progress task:
-```json
-{
-  "title": "Implement authentication flow",
-  "description": "Build login, register, and forgot password pages with JWT auth.",
-  "category": "development",
   "priority": "high",
   "status": "inprogress",
-  "projectId": "{projectId}",
-  "assignedUser": "u1",
-  "dueDate": "2026-06-30",
-  "createdBy": "u1"
+  "assignedUser": "user-asim-01",
+  "projectId": "proj-001",
+  "createdAt": "2026-02-05T00:00:00.000Z",
+  "updatedAt": "2026-05-20T00:00:00.000Z"
 }
 ```
 
-Review & QA task:
+**Response 404**
 ```json
-{
-  "title": "Review API documentation",
-  "description": "Check all endpoint docs for accuracy and completeness.",
-  "category": "research",
-  "priority": "low",
-  "status": "review_qa",
-  "projectId": "{projectId}",
-  "assignedUser": "u4",
-  "dueDate": "2026-06-20",
-  "createdBy": "u3"
-}
+{ "error": "Task not found" }
 ```
 
-Rejection task:
-```json
-{
-  "title": "Add animated onboarding screen",
-  "description": "Client rejected the animation — needs to be redesigned.",
-  "category": "design",
-  "priority": "medium",
-  "status": "rejection",
-  "projectId": "{projectId}",
-  "assignedUser": "u5",
-  "createdBy": "u2"
-}
+---
+
+### POST /api/tasks
+Create a new task.
+
+```
+POST {{base}}/api/tasks
+Content-Type: application/json
 ```
 
-Completed task:
+**Body**
 ```json
 {
-  "title": "Set up CI/CD pipeline",
-  "description": "Configure GitHub Actions for automated testing and Vercel deployment.",
+  "id": "task-new-001",
+  "title": "Build login page UI",
+  "description": "Implement the login form with email and password validation.",
   "category": "development",
   "priority": "high",
-  "status": "completed",
-  "projectId": "{projectId}",
-  "assignedUser": "u1",
-  "dueDate": "2026-06-10",
-  "bannerImage": "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800",
-  "createdBy": "u1"
+  "dueDate": "2026-07-15",
+  "assignedUser": "user-ali-01",
+  "status": "todo",
+  "projectId": "proj-new-001",
+  "createdBy": "user-admin-01",
+  "createdAt": "2026-06-07T00:00:00.000Z",
+  "updatedAt": "2026-06-07T00:00:00.000Z"
 }
 ```
 
-Task with no assigned user:
+**Valid values**
+- `category`: `"design"` `"research"` `"development"` `"planning"`
+- `priority`: `"low"` `"medium"` `"high"`
+- `status`: `"backlog"` `"todo"` `"inprogress"` `"review_qa"` `"rejection"` `"completed"`
+
+**Response 201**
 ```json
 {
-  "title": "Write unit tests for dashboard stats",
-  "description": "Cover all branches of computeDashboardStats with Vitest.",
+  "id": "task-new-001",
+  "title": "Build login page UI",
   "category": "development",
-  "priority": "low",
-  "status": "todo",
-  "projectId": "{projectId}",
-  "createdBy": "u4"
-}
-```
-
-Planning task with banner:
-```json
-{
-  "title": "Sprint planning session",
-  "description": "Define stories, assign points, and set goals for the upcoming sprint.",
-  "category": "planning",
-  "priority": "medium",
-  "status": "todo",
-  "projectId": "{projectId}",
-  "assignedUser": "u2",
-  "dueDate": "2026-07-01",
-  "bannerImage": "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800",
-  "createdBy": "u2"
-}
-```
-
----
-
-### PATCH update task
-
-Update status only (drag-drop equivalent):
-```json
-{
-  "status": "inprogress"
-}
-```
-
-Update priority and due date:
-```json
-{
   "priority": "high",
-  "dueDate": "2026-07-01"
+  "status": "todo",
+  "assignedUser": "user-ali-01",
+  "projectId": "proj-new-001",
+  "createdAt": "2026-06-07T00:00:00.000Z",
+  "updatedAt": "2026-06-07T00:00:00.000Z"
 }
 ```
 
-Assign to a different user:
+---
+
+### PATCH /api/tasks/:id
+Update a task — send only the fields to change.
+
+```
+PATCH {{base}}/api/tasks/task-new-001
+Content-Type: application/json
+```
+
+**Body**
 ```json
 {
-  "assignedUser": "u3"
+  "status": "inprogress",
+  "updatedAt": "2026-06-07T12:00:00.000Z"
 }
 ```
 
-Update title and description:
+**Response 200** — returns the full updated document
 ```json
 {
-  "title": "Redesign landing page wireframes",
-  "description": "Updated scope — include mobile and tablet breakpoints."
+  "id": "task-new-001",
+  "title": "Build login page UI",
+  "status": "inprogress",
+  "updatedAt": "2026-06-07T12:00:00.000Z"
 }
 ```
 
-Mark as completed:
+**Response 404**
 ```json
-{
-  "status": "completed"
-}
+{ "error": "Task not found" }
 ```
 
 ---
 
-### DELETE task
+### DELETE /api/tasks/:id
+Delete a task permanently.
+
 ```
-DELETE /api/tasks/{id}
-```
-No body needed.
-
----
-
----
-
-## Quick Reference
-
-### Valid field values
-
-**category**
-```
-design | planning | research | development
+DELETE {{base}}/api/tasks/task-new-001
 ```
 
-**status (task)**
-```
-backlog | todo | inprogress | review_qa | rejection | completed
-```
-
-**priority**
-```
-low | medium | high
+**Response 200**
+```json
+{ "success": true }
 ```
 
-**status (project)**
-```
-active | onhold | completed
-```
-
-**role (user)**
-```
-admin | member
+**Response 404**
+```json
+{ "error": "Task not found" }
 ```
 
 ---
 
-### Seeded users (always available)
+## Postman Setup Guide
 
-| ID | Name | Email | Role |
-|---|---|---|---|
-| u1 | Alice Chen | alice@example.com | admin |
-| u2 | Bob Martinez | bob@example.com | member |
-| u3 | Carol Smith | carol@example.com | member |
-| u4 | David Kim | david@example.com | member |
-| u5 | Eva Johnson | eva@example.com | member |
-
----
-
-Recommended test order
-
-1. `POST /api/projects` → copy the returned `id`
-2. `POST /api/tasks` → paste the project `id` into `projectId`
-3. `GET /api/tasks` → verify task was created
-4. `PATCH /api/tasks/{id}` → update status
-5. `GET /api/tasks/{id}` → verify update
-6. `DELETE /api/tasks/{id}` → delete task
-7. `GET /api/tasks/{id}` → expect `404 Not Found`
-8. `DELETE /api/projects/{id}` → delete project
-9. `GET /api/projects/{id}` → expect `404 Not Found`
+1. Open Postman → click **Environments** (top right) → **Add**
+2. Name it `TaskFlow Local` — add variable:
+   - Key: `base` | Value: `http://localhost:3000`
+3. Duplicate the environment, name it `TaskFlow Production`, change `base` to `https://cplus-soft-assessment.vercel.app`
+4. Create a **Collection** named `TaskFlow API` with four folders: `Health`, `Users`, `Projects`, `Tasks`
+5. On the **Collection** level → **Headers** tab → add:
+   - `Content-Type` : `application/json`
+6. Always run `GET {{base}}/api/health` first to confirm the database is reachable before testing other endpoints

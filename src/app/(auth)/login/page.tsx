@@ -135,7 +135,7 @@ export default function LoginPage() {
         <p className="font-medium mb-1" style={{ color: "var(--color-heading)" }}>
           Demo credentials
         </p>
-        <p>Email: admin@gmail.com</p>
+        <p>Email: admin@taskflow.dev</p>
         <p>Password: password123</p>
       </div>
     </div>
