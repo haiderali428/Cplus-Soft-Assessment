@@ -90,6 +90,10 @@ export function AddTaskModal({ task }: AddTaskModalProps) {
   const currentUser = useAppSelector((s) => s.auth.user);
   const isAdmin = currentUser?.role === "admin";
 
+  // Admin or the task's creator can edit all fields.
+  // A plain member editing someone else's task can only change status.
+  const canEditAll = !isEdit || isAdmin || task?.createdBy === currentUser?.id;
+
   const { users, loading: usersLoading, error: usersError } = useUsers();
 
   const projectOptions = projects.map((p) => ({ value: p.id, label: p.name }));
@@ -162,6 +166,20 @@ export function AddTaskModal({ task }: AddTaskModalProps) {
     >
       {taskError && <Alert type="error" message={taskError} className="mb-4" />}
 
+      {/* Status-only restriction notice */}
+      {isEdit && !canEditAll && (
+        <div
+          className="mb-4 rounded-md border px-3 py-2 text-xs"
+          style={{
+            borderColor: "var(--color-date-border)",
+            background: "var(--color-date-bg)",
+            color: "var(--color-desc)",
+          }}
+        >
+          You can only update the <strong style={{ color: "var(--color-heading)" }}>status</strong> of tasks you don&apos;t own.
+        </div>
+      )}
+
       <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
 
         {/* Title */}
@@ -170,6 +188,7 @@ export function AddTaskModal({ task }: AddTaskModalProps) {
           label="Title"
           placeholder="e.g. Design onboarding screens"
           required
+          disabled={!canEditAll}
           error={errors.title?.message}
         />
 
@@ -187,6 +206,7 @@ export function AddTaskModal({ task }: AddTaskModalProps) {
             id="task-description"
             rows={3}
             placeholder="What needs to be done?"
+            disabled={!canEditAll}
             className={cn(
               "w-full resize-none rounded-md border px-3 py-2 text-sm outline-none transition-colors",
               "bg-card-bg text-heading placeholder:text-desc",
@@ -208,6 +228,7 @@ export function AddTaskModal({ task }: AddTaskModalProps) {
             {...register("category")}
             label="Category"
             required
+            disabled={!canEditAll}
             options={CATEGORY_OPTIONS}
             error={errors.category?.message}
           />
@@ -215,6 +236,7 @@ export function AddTaskModal({ task }: AddTaskModalProps) {
             {...register("priority")}
             label="Priority"
             required
+            disabled={!canEditAll}
             options={PRIORITY_OPTIONS}
             error={errors.priority?.message}
           />
@@ -233,6 +255,7 @@ export function AddTaskModal({ task }: AddTaskModalProps) {
             {...register("dueDate")}
             type="date"
             label="Due Date"
+            disabled={!canEditAll}
             error={errors.dueDate?.message}
           />
         </div>
@@ -258,6 +281,7 @@ export function AddTaskModal({ task }: AddTaskModalProps) {
               {...register("projectId")}
               id="task-projectId"
               placeholder="— Select project —"
+              disabled={!canEditAll}
               options={projectOptions}
               error={errors.projectId?.message}
             />
@@ -270,6 +294,7 @@ export function AddTaskModal({ task }: AddTaskModalProps) {
           type="url"
           label="Banner Image URL"
           placeholder="https://example.com/image.jpg"
+          disabled={!canEditAll}
           error={errors.bannerImage?.message}
         />
 
