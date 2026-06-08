@@ -270,3 +270,5 @@ Full request/response examples for every endpoint are documented in [api_test.md
 Live at: `https://cplus-soft-assessment.vercel.app/`
 
 No extra setup needed — the built-in Next.js API routes (`/api/*`) serve all data on Vercel with no external services required.
+
+Hope For Best
