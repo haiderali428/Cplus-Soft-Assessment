@@ -45,6 +45,7 @@ export default function ProjectsPage() {
   const dispatch = useAppDispatch();
   const { items: projects, loading, error } = useAppSelector((s) => s.projects);
   const currentUserId = useAppSelector((s) => s.auth.user?.id);
+  const isAdmin       = useAppSelector((s) => s.auth.user?.role === "admin");
 
   const [filter,      setFilter]      = useState<FilterValue>("all");
   const [formModal,   setFormModal]   = useState<FormModalState>({ open: false });
@@ -81,7 +82,7 @@ export default function ProjectsPage() {
     [projects]
   );
 
-  // Handlers───────────────────────────────────────────────────────
+  // Handlers
 
   const openCreate = () => setFormModal({ open: true, project: undefined });
   const openEdit   = (project: Project) => setFormModal({ open: true, project });
@@ -106,7 +107,7 @@ export default function ProjectsPage() {
     <>
       <div className="mx-auto max-w-7xl space-y-6 p-6 sm:p-8">
 
-        {/* Page header───────────────────────────────────────── */}
+        {/* Page header */}
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <SubHeading as="h1" className="text-2xl lg:text-3xl">
@@ -128,7 +129,7 @@ export default function ProjectsPage() {
           </Button>
         </div>
 
-        {/* Error state───────────────────────────────────────── */}
+        {/* Error state */}
         {error && !loading && (
           <div className="flex flex-wrap items-center gap-3">
             <Alert
@@ -143,7 +144,7 @@ export default function ProjectsPage() {
           </div>
         )}
 
-        {/* Filter tabs───────────────────────────────────────── */}
+        {/* Filter tabs */}
         <div
           role="tablist"
           aria-label="Filter projects by status"
@@ -189,7 +190,7 @@ export default function ProjectsPage() {
           })}
         </div>
 
-        {/* Content───────────────────────────────────────────── */}
+        {/* Content */}
 
         {/* Loading skeleton */}
         {loading && projects.length === 0 && (
@@ -209,7 +210,7 @@ export default function ProjectsPage() {
                 project={project}
                 onEdit={openEdit}
                 onDelete={openDelete}
-                canDelete={project.createdBy === currentUserId}
+                canDelete={project.createdBy === currentUserId || isAdmin}
                 index={i}
               />
             ))}
@@ -260,7 +261,7 @@ export default function ProjectsPage() {
         )}
       </div>
 
-      {/* Modals (rendered outside the scroll container)───────── */}
+      {/* Modals (rendered outside the scroll container)*/}
 
       {formModal.open && (
         <ProjectFormModal
