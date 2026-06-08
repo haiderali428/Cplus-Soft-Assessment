@@ -25,7 +25,7 @@ export function Navbar() {
         <button
           aria-label="Toggle sidebar"
           onClick={() => dispatch(toggleSidebar())}
-          className="flex h-9 w-9 items-center justify-center rounded-md transition-colors hover:bg-black/5 dark:hover:bg-white/10 lg:hidden"
+          className="flex h-9 w-9 items-center justify-center rounded-md transition-colors hover:bg-black/5 dark:hover:bg-white/10 lg:hidden cursor-pointer"
         >
           <Menu size={20} style={{ color: "var(--color-heading)" }} />
         </button>

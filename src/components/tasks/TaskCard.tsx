@@ -149,7 +149,7 @@ export const TaskCard = memo(function TaskCard({
         {canEdit && onEdit && (
           <button
             onClick={(e) => { e.preventDefault(); e.stopPropagation(); onEdit(task); }}
-            className="flex h-6 w-6 items-center justify-center rounded opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-tag-design"
+            className="flex h-6 w-6 items-center justify-center rounded opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-tag-design cursor-pointer"
             style={{ background: "color-mix(in srgb, var(--color-desc) 14%, var(--color-card-bg))" }}
             aria-label={`Edit ${task.title}`}
             title="Edit task"
@@ -160,7 +160,7 @@ export const TaskCard = memo(function TaskCard({
         {canDelete && onDelete && (
           <button
             onClick={(e) => { e.preventDefault(); e.stopPropagation(); onDelete(task); }}
-            className="flex h-6 w-6 items-center justify-center rounded opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-red-400"
+            className="flex h-6 w-6 items-center justify-center rounded opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-red-400 cursor-pointer"
             style={{ background: "color-mix(in srgb, var(--color-desc) 14%, var(--color-card-bg))" }}
             aria-label={`Delete ${task.title}`}
             title="Delete task"

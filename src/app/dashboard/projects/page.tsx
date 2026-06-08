@@ -160,7 +160,7 @@ export default function ProjectsPage() {
                 aria-selected={active}
                 onClick={() => setFilter(value)}
                 onKeyDown={(e) => handleTabKeyDown(e, idx)}
-                className="inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tag-design"
+                className="inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tag-design cursor-pointer"
                 style={
                   active
                     ? { background: "var(--tag-design)", color: "#fff" }
