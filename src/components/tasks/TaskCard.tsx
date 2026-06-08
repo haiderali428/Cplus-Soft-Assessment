@@ -120,7 +120,7 @@ export const TaskCard = memo(function TaskCard({
   isAdmin,
 }: TaskCardProps) {
   const isCreator  = Boolean(currentUserId && task.createdBy === currentUserId);
-  const canEdit    = isCreator;
+  const canEdit    = Boolean(currentUserId);
   const canDelete  = isCreator || Boolean(isAdmin);
   const {
     setNodeRef,
