@@ -50,15 +50,7 @@ npm install
 cp .env.example .env.local
 ```
 
-### 3. Start the mock API server
-
-```bash
-npm run mock
-```
-
-Runs json-server on `http://localhost:4000`.
-
-### 4. Start the Next.js dev server
+### 3. Start the Next.js dev server
 
 ```bash
 npm run dev
